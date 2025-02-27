@@ -1,10 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_socketio import SocketIO
-from rcon import RCONClient
+from mc_rcon import RCONClient
 from system_monitor import SystemMonitor
 from log_parser import LogParser
 from threading import Lock
-
 
 
 app = Flask(__name__)
@@ -22,7 +21,6 @@ def system_stats():
     
 
 
-
 @app.route('/api/command', methods=['POST'])
 def send_command():
     data = request.json
@@ -36,8 +34,7 @@ def send_command():
         return jsonify({"response": response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
-
+        
 @app.route('/')
 def hello():
     return "Minecraft Monitor Backend Running!"
