@@ -1,44 +1,55 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_socketio import SocketIO
 from rcon import RCONClient
 from system_monitor import SystemMonitor
 from log_parser import LogParser
+from threading import Lock
+
+
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-@app.route('/players')
+@app.route('/api/players', methods=['GET'])
 def players():
     parser = LogParser("/home/corn/fabric_1.21/logs/latest.log")
     return {"players": parser.get_current_players()}
 
-@app.route('/system_stats')
+@app.route('/api/system_stats', methods=['GET'])
 def system_stats():
     return SystemMonitor.get_stats()
 
-@app.route('/test_rcon')
-def test_rcon():
+    
+
+
+
+@app.route('/api/command', methods=['POST'])
+def send_command():
+    data = request.json
+    command = data.get('command')
+    if not command:
+        return jsonify({"error": "Command is required"}), 400
+
     rcon = RCONClient()
     try:
-        return rcon.send_command("list")
+        response = rcon.send_command(command)
+        return jsonify({"response": response})
     except Exception as e:
-        return f"RCON Error: {str(e)}", 500
+        return jsonify({"error": str(e)}), 500
     
+
 @app.route('/')
 def hello():
     return "Minecraft Monitor Backend Running!"
 
 
-
-
-from threading import Lock
 thread = None
 thread_lock = Lock()
 
 def background_thread():
     while True:
         stats = SystemMonitor.get_stats()
-        players = LogParser("/path/to/server.log").get_current_players()
+        players = LogParser("/home/corn/fabric_1.21/logs/latest.log").get_current_players()
         socketio.emit('update', {
             'stats': stats,
             'players': players
