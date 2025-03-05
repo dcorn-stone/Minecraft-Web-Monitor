@@ -9,6 +9,10 @@ from threading import Lock
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+@app.route('/')
+def index():
+    return 'Index Page'
+
 @app.route('/api/players', methods=['GET'])
 def players():
     parser = LogParser("/home/corn/fabric_1.21/logs/latest.log")
@@ -34,10 +38,6 @@ def send_command():
         return jsonify({"response": response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-        
-@app.route('/')
-def hello():
-    return "Minecraft Monitor Backend Running!"
 
 
 thread = None
