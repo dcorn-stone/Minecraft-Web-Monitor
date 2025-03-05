@@ -5,7 +5,7 @@ from system_monitor import SystemMonitor
 from log_parser import LogParser
 from threading import Lock
 
-
+print(SystemMonitor.get_stats())
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
