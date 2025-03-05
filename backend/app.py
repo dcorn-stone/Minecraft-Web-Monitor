@@ -1,3 +1,4 @@
+import flask
 from flask import Flask, request, jsonify
 from flask_socketio import SocketIO
 from mc_rcon import RCONClient
@@ -11,7 +12,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def index():
-    return 'Index Page'
+    return flask.render_template('index.html',show=True)
 
 @app.route('/api/players', methods=['GET'])
 def players():
