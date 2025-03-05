@@ -5,6 +5,7 @@ from mc_rcon import RCONClient
 from system_monitor import SystemMonitor
 from log_parser import LogParser
 from threading import Lock
+import json
 
 print(SystemMonitor.get_stats())
 app = Flask(__name__)
@@ -21,6 +22,7 @@ def players():
 
 @app.route('/api/system_stats', methods=['GET'])
 def system_stats():
+    print(json.loads(SystemMonitor.get_stats()))
     return SystemMonitor.get_stats()
 
     
