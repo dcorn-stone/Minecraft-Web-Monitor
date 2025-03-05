@@ -1,5 +1,4 @@
-import flask
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_socketio import SocketIO
 from mc_rcon import RCONClient
 from system_monitor import SystemMonitor
@@ -12,7 +11,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def index():
-    return flask.render_template('index.html',show=True)
+    return render_template('index.html',show=True)
 
 @app.route('/api/players', methods=['GET'])
 def players():
